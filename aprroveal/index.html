@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Attendance System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: #4285f4;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .mode-button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .registration-btn {
+            background-color: #0f9d58;
+        }
+        
+        .approval-btn {
+            background-color: #db4437;
+        }
+        
+        .mode-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mode-button.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .content-area {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #4285f4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+        
+        #qr-reader {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        button.submit-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        button.submit-btn:hover {
+            background-color: #3367d6;
+        }
+        
+        .status-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .success {
+            background-color: #e6f4ea;
+            color: #0f9d58;
+            border: 1px solid #0f9d58;
+            display: block;
+        }
+        
+        .error {
+            background-color: #fce8e6;
+            color: #db4437;
+            border: 1px solid #db4437;
+            display: block;
+        }
+        
+        .scan-btn {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .scan-btn:hover {
+            background-color: #3367d6;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>QR Code Attendance System</h1>
+    </header>
+    
+    <div class="container">
+        <div class="button-container">
+            <button id="registrationBtn" class="mode-button registration-btn active">Registration</button>
+            <button id="approvalBtn" class="mode-button approval-btn">Approval</button>
+        </div>
+        
+        <div id="registrationContent" class="content-area">
+            <h2>Student Registration</h2>
+            
+            <button id="scanQrRegBtn" class="scan-btn">Scan QR Code</button>
+            
+            <div id="qr-reader-reg" class="hidden"></div>
+            
+            <div class="form-group">
+                <label for="uid">UID (from QR Code):</label>
+                <input type="text" id="uid" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="enrollmentNumber">Enrollment Number:</label>
+                <input type="text" id="enrollmentNumber" placeholder="Enter enrollment number">
+            </div>
+            
+            <button id="registerBtn" class="submit-btn">Register Student</button>
+            
+            <div id="regStatusMessage" class="status-message"></div>
+        </div>
+        
+        <div id="approvalContent" class="content-area hidden">
+            <h2>Attendance Approval</h2>
+            
+            <button id="scanQrApprovalBtn" class="scan-btn">Scan QR Code</button>
+            
+            <div id="qr-reader-approval" class="hidden"></div>
+            
+            <div class="form-group">
+                <label for="attendanceUid">UID (from QR Code):</label>
+                <input type="text" id="attendanceUid" readonly>
+            </div>
+            
+            <button id="markAttendanceBtn" class="submit-btn">Mark Present</button>
+            
+            <div id="approvalStatusMessage" class="status-message"></div>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2025 QR Code Attendance System
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const registrationBtn = document.getElementById('registrationBtn');
+        const approvalBtn = document.getElementById('approvalBtn');
+        const registrationContent = document.getElementById('registrationContent');
+        const approvalContent = document.getElementById('approvalContent');
+        const scanQrRegBtn = document.getElementById('scanQrRegBtn');
+        const scanQrApprovalBtn = document.getElementById('scanQrApprovalBtn');
+        const qrReaderReg = document.getElementById('qr-reader-reg');
+        const qrReaderApproval = document.getElementById('qr-reader-approval');
+        const uidInput = document.getElementById('uid');
+        const attendanceUidInput = document.getElementById('attendanceUid');
+        const enrollmentNumberInput = document.getElementById('enrollmentNumber');
+        const registerBtn = document.getElementById('registerBtn');
+        const markAttendanceBtn = document.getElementById('markAttendanceBtn');
+        const regStatusMessage = document.getElementById('regStatusMessage');
+        const approvalStatusMessage = document.getElementById('approvalStatusMessage');
+        
+        // Variables for QR Scanner
+        let html5QrCodeRegScanner = null;
+        let html5QrCodeApprovalScanner = null;
+        
+        // Switch between registration and approval modes
+        registrationBtn.addEventListener('click', () => {
+            registrationBtn.classList.add('active');
+            approvalBtn.classList.remove('active');
+            registrationContent.classList.remove('hidden');
+            approvalContent.classList.add('hidden');
+            stopQrScanners();
+        });
+        
+        approvalBtn.addEventListener('click', () => {
+            approvalBtn.classList.add('active');
+            registrationBtn.classList.remove('active');
+            approvalContent.classList.remove('hidden');
+            registrationContent.classList.add('hidden');
+            stopQrScanners();
+        });
+        
+        // Function to stop QR scanners
+        function stopQrScanners() {
+            if (html5QrCodeRegScanner && html5QrCodeRegScanner.isScanning) {
+                html5QrCodeRegScanner.stop();
+                qrReaderReg.classList.add('hidden');
+            }
+            
+            if (html5QrCodeApprovalScanner && html5QrCodeApprovalScanner.isScanning) {
+                html5QrCodeApprovalScanner.stop();
+                qrReaderApproval.classList.add('hidden');
+            }
+        }
+        
+        // Start QR Scanner for Registration
+        scanQrRegBtn.addEventListener('click', () => {
+            qrReaderReg.classList.remove('hidden');
+            scanQrRegBtn.classList.add('hidden');
+            
+            html5QrCodeRegScanner = new Html5Qrcode("qr-reader-reg");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            html5QrCodeRegScanner.start(
+                { facingMode: "environment" }, 
+                config, 
+                (decodedText) => {
+                    // On successful scan
+                    uidInput.value = decodedText;
+                    html5QrCodeRegScanner.stop();
+                    qrReaderReg.classList.add('hidden');
+                    scanQrRegBtn.classList.remove('hidden');
+                    showStatusMessage(regStatusMessage, "QR Code scanned successfully!", "success");
+                },
+                (errorMessage) => {
+                    // On error
+                    console.log(errorMessage);
+                }
+            );
+        });
+        
+        // Start QR Scanner for Approval
+        scanQrApprovalBtn.addEventListener('click', () => {
+            qrReaderApproval.classList.remove('hidden');
+            scanQrApprovalBtn.classList.add('hidden');
+            
+            html5QrCodeApprovalScanner = new Html5Qrcode("qr-reader-approval");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            html5QrCodeApprovalScanner.start(
+                { facingMode: "environment" }, 
+                config, 
+                (decodedText) => {
+                    // On successful scan
+                    attendanceUidInput.value = decodedText;
+                    html5QrCodeApprovalScanner.stop();
+                    qrReaderApproval.classList.add('hidden');
+                    scanQrApprovalBtn.classList.remove('hidden');
+                    showStatusMessage(approvalStatusMessage, "QR Code scanned successfully!", "success");
+                },
+                (errorMessage) => {
+                    // On error
+                    console.log(errorMessage);
+                }
+            );
+        });
+        
+        // Registration form submission
+        registerBtn.addEventListener('click', () => {
+            const uid = uidInput.value.trim();
+            const enrollmentNumber = enrollmentNumberInput.value.trim();
+            
+            if (!uid) {
+                showStatusMessage(regStatusMessage, "Please scan a QR code first", "error");
+                return;
+            }
+            
+            if (!enrollmentNumber) {
+                showStatusMessage(regStatusMessage, "Please enter an enrollment number", "error");
+                return;
+            }
+            
+            // Here you would connect to Google Sheets API
+            // For demonstration, we'll simulate a successful registration
+            
+            // In a real implementation, you would use Google Sheets API to:
+            // 1. Find the row with the given enrollment number
+            // 2. Update the UID column and set status to "active"
+            
+            // Simulate API call with a timeout
+            showStatusMessage(regStatusMessage, "Processing registration...", "success");
+            
+            setTimeout(() => {
+                console.log(`Registered: UID=${uid}, Enrollment=${enrollmentNumber}`);
+                showStatusMessage(regStatusMessage, "Student registered successfully!", "success");
+                
+                // Clear the form
+                uidInput.value = "";
+                enrollmentNumberInput.value = "";
+            }, 1500);
+        });
+        
+        // Attendance marking
+        markAttendanceBtn.addEventListener('click', () => {
+            const uid = attendanceUidInput.value.trim();
+            
+            if (!uid) {
+                showStatusMessage(approvalStatusMessage, "Please scan a QR code first", "error");
+                return;
+            }
+            
+            // Here you would connect to Google Sheets API
+            // For demonstration, we'll simulate a successful attendance marking
+            
+            // In a real implementation, you would use Google Sheets API to:
+            // 1. Find the row with the given UID
+            // 2. Update the attendance column to "present"
+            
+            // Simulate API call with a timeout
+            showStatusMessage(approvalStatusMessage, "Processing attendance...", "success");
+            
+            setTimeout(() => {
+                console.log(`Marked Present: UID=${uid}`);
+                showStatusMessage(approvalStatusMessage, "Attendance marked successfully!", "success");
+                
+                // Clear the form
+                attendanceUidInput.value = "";
+            }, 1500);
+        });
+        
+        // Helper function to show status messages
+        function showStatusMessage(element, message, type) {
+            element.textContent = message;
+            element.className = "status-message";
+            element.classList.add(type);
+            
+            // Auto hide after 5 seconds if it's a success message
+            if (type === "success") {
+                setTimeout(() => {
+                    element.style.display = "none";
+                }, 5000);
+            }
+        }
+        
+        // Google Sheets Integration (placeholder functions)
+        
+        // In a real implementation, you would use the Google Sheets API
+        // Below are placeholder functions to demonstrate the flow
+        
+        function registerStudentInSheet(uid, enrollmentNumber) {
+            // This would use Google Sheets API to:
+            // 1. Find the row with the enrollment number
+            // 2. Update the UID column and status column
+            console.log(`Registering in sheet: UID=${uid}, Enrollment=${enrollmentNumber}`);
+            return Promise.resolve(true); // Simulate successful API call
+        }
+        
+        function markAttendanceInSheet(uid) {
+            // This would use Google Sheets API to:
+            // 1. Find the row with the UID
+            // 2. Update the attendance column to "present"
+            console.log(`Marking attendance in sheet: UID=${uid}`);
+            return Promise.resolve(true); // Simulate successful API call
+        }
+        
+        // Note: To implement actual Google Sheets integration, you would need to:
+        // 1. Set up a Google Cloud project
+        // 2. Enable the Google Sheets API
+        // 3. Create OAuth credentials or service account
+        // 4. Use the Google Sheets API client library
+        // 5. Deploy this to a server with proper authentication
+    </script>
+</body>
+</html>
