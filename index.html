@@ -1,14 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tecnovision 25 - Ghost in the Neural Breach</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Tecnovision 25 - Encrypted Evidence</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-   
+    <style>
+        :root {
+            --primary-color: #00ff00;
+            --primary-dark: #00cc00;
+            --secondary-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #ff00ff;
+            --background-dark: #0a0a0a;
+            --background-light: #1a1a1a;
+            --card-bg: rgba(18, 18, 18, 0.8);
+            --header-font: 'Courier New', monospace;
+            --body-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--background-dark);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header and Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 0.8rem 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: var(--header-font);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1rem;
+            position: relative;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, rgba(10, 10, 10, 0.9) 70%);
+        }
+
+        .glitch-container {
+            position: relative;
+            font-family: var(--header-font);
+            font-weight: bold;
+            font-size: 4rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        .glitch-container::before,
+        .glitch-container::after {
+            content: 'Encrypted Evidence';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-container::before {
+            color: var(--accent-color);
+            z-index: -1;
+            animation: glitch 3s infinite;
+        }
+
+        .glitch-container::after {
+            color: var(--primary-color);
+            z-index: -2;
+            animation: glitch 3s 0.1s infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(5px);
+            }
+
+            50% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(3px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            color: var(--text-color);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 255, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* About Section */
+        .section {
+            padding: 5rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: var(--header-font);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .about-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 255, 0, 0.15);
+        }
+
+        .about-card-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .about-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .about-card p {
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* People Section */
+        .people-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .person-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .person-card:hover {
+            transform: translateY(-10px);
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 10px 25px rgba(0, 255, 0, 0.15);
+        }
+
+        .person-img {
+            height: 200px;
+            width: 100%;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .person-img i {
+            font-size: 5rem;
+            color: var(--primary-color);
+        }
+
+        .person-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .person-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+
+        .person-info p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Registration Form */
+        .registration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .registration-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .registration-form {
+            background-color: var(--background-light);
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            transform: translateY(50px);
+            transition: all 0.3s ease;
+        }
+
+        .registration-overlay.show .registration-form {
+            transform: translateY(0);
+        }
+
+        .close-form {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-form:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .form-title {
+            font-family: var(--header-font);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .form-group select {
+            appearance: none;
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%2300ff00' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+        }
+
+        .form-submit:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .form-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .form-status.success {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            display: block;
+        }
+
+        .form-status.error {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--background-light);
+            border-top: 1px solid var(--primary-color);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: var(--header-font);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .copyright {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            .header-container {
+                padding: 0;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 300px;
+                height: 100vh;
+                background-color: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(10px);
+                z-index: 101;
+                transition: all 0.3s ease;
+                padding: 5rem 1rem 1rem;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            }
+
+            nav.active {
+                right: 0;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            nav ul li {
+                margin-left: 0;
+            }
+
+            nav ul li a {
+                display: block;
+                padding: 0.5rem;
+                font-size: 1.2rem;
+            }
+
+            .hamburger {
+                display: block;
+                z-index: 102;
+            }
+
+            .hamburger.active {
+                color: var(--primary-color);
+            }
+
+            .glitch-container {
+                font-size: 2.5rem;
+            }
+
+            .hero-tagline {
+                font-size: 1.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .people-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .glitch-container {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .form-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <div id="particles-js"></div>
 
@@ -23,8 +737,11 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#people">Team</a></li>
-                    <li><a href="#" id="register-nav">Register</a></li>
-                    <li><a href="https://chat.whatsapp.com/XXXXXXX" target="_blank">Join us</a></li>
+                    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSftIev1sCzKiAKAkCZQPLOgK0R7ESGAPtirqxgjCy5WYDZsSg/viewform?usp=header"
+                            id="register-nav" target="_blank">Register</a></li>
+                    <li><a href="https://chat.whatsapp.com/L3plkhjTjVzJAf0y7MiBVi" target="_blank">Join us</a></li>
+
+                    <li><a href="index.php">Dashboard</a></li>
 
                 </ul>
             </nav>
@@ -36,12 +753,13 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="glitch-container">BUG BOUNTY</div>
+        <div class="glitch-container">Encrypted Evidence</div>
         <h2 class="hero-tagline">Hunt. Exploit. Secure. Join the elite hackers at TecnoVision'25</h2>
         <div class="hero-buttons">
-            <button class="btn btn-primary" id="register-btn" style="z-index: 999;">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSftIev1sCzKiAKAkCZQPLOgK0R7ESGAPtirqxgjCy5WYDZsSg/viewform?usp=header"
+                class="btn btn-primary" id="register-btn" style="z-index: 999;" target="_blank">
                 <i class="fas fa-user-plus"></i> Register Now
-            </button>
+            </a>
             <a href="#about" class="btn btn-secondary" style="z-index: 999;">
                 <i class="fas fa-info-circle"></i> Learn More
             </a>
@@ -50,28 +768,58 @@
 
     <!-- About Section -->
     <section id="about" class="section">
-        <h2 class="section-title">About Bug Bounty</h2>
+        <h2 class="section-title">About Encrypted Evidence</h2>
         <div class="about-content">
             <div class="about-card">
                 <div class="about-card-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3>The Challenge</h3>
-                <p>Bug Bounty is our premier hacking competition that tests your skills in identifying vulnerabilities in real-world applications. Participants will have the opportunity to showcase their security expertise and win exciting prizes.</p>
+                <p>Use your cybersecurity skills and tools to solve the challenge. This might involve analyzing
+                    code, decrypting messages, or exploiting vulnerabilities. The goal is to find the hidden "FLAG"
+                    - a specific string of text that proves you've solved the challenge.</p>
             </div>
             <div class="about-card">
                 <div class="about-card-icon">
                     <i class="fas fa-trophy"></i>
                 </div>
                 <h3>The Prizes</h3>
-                <p>Win big with our substantial prize pool! Top performers will receive recognition, certificates, and exclusive tech gadgets. The ultimate winner will be crowned as the 'Security Master' of TecnoVision'25.</p>
+                <p>Win big with our substantial prize pool! Top performers will receive recognition, certificates,
+                    Secret price,Shoutout from us,Free UDEMY course and Direct entry in upcoming hackathon as
+                    participation*.</p>
             </div>
             <div class="about-card">
                 <div class="about-card-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3>The Community</h3>
-                <p>Join a community of like-minded security enthusiasts and professionals. Network with industry experts, learn advanced security techniques, and boost your career prospects in the cybersecurity domain.</p>
+                <p>Join a community of like-minded security enthusiasts and professionals. Network with industry
+                    experts, learn advanced security techniques, and boost your career prospects in the cybersecurity
+                    domain.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <h3>How to Play</h3>
+                <p>Check out our page for more informations about it <a href="play.php" target="_blank">learn</a>.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <h3>Code of conduct</h3>
+                <p>Check out our page for more informations about it <a href="rules.php" target="_blank">learn</a>.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon">
+                    <i class="fa-solid fa-file"></i>
+                </div>
+                <h3>Event Details</h3>
+                <p>Date: April 05,2025</p>
+                <p>Mode: Offline</p>
+                <p>Time: TBD</p>
+                <p>Venue: Tecnia Institute of Advanced Studies UG Room NUMBER 2407</p>
             </div>
         </div>
     </section>
@@ -85,19 +833,33 @@
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="person-info">
-                    <h3>Dr. Anil Kumar</h3>
+                    <h3>Mr. Gaurav</h3>
                     <p>Faculty Head</p>
-                    <p>Cybersecurity Department</p>
+                    <p><a href="#"><i class="fab fa-linkedin-in"></i></a></p>
                 </div>
             </div>
             <div class="person-card">
                 <div class="person-img">
-                    <i class="fas fa-user-tie"></i>
+                    <i class="fas fa-user-graduate"></i>
                 </div>
                 <div class="person-info">
-                    <h3>Prof. Sarah Johnson</h3>
+                    <h3>Arnav Dua</h3>
+                    <p>Event Coordinator Head</p>
+                    <p>Bachelor of Computer Applications Final Year <br> <a
+                            href="https://www.linkedin.com/in/arnav-dua-b49b05261/" target="_blank"><i
+                                class="fab fa-linkedin-in"></i></a></p>
+                </div>
+            </div>
+            <div class="person-card">
+                <div class="person-img">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="person-info">
+                    <h3>Rajiv Kumar</h3>
                     <p>Event Coordinator</p>
-                    <p>Computer Science Department</p>
+                    <p>Bachelor of Computer Applications Second Semester <br><a
+                            href="https://www.linkedin.com/in/rajiv-kumar-dev" target="_blank"><i
+                                class="fab fa-linkedin-in"></i></a></p>
                 </div>
             </div>
             <div class="person-card">
@@ -105,85 +867,17 @@
                     <i class="fas fa-user-graduate"></i>
                 </div>
                 <div class="person-info">
-                    <h3>Rahul Sharma</h3>
-                    <p>Student Coordinator</p>
-                    <p>Final Year, CSE</p>
-                </div>
-            </div>
-            <div class="person-card">
-                <div class="person-img">
-                    <i class="fas fa-user-graduate"></i>
-                </div>
-                <div class="person-info">
-                    <h3>Priya Patel</h3>
-                    <p>Volunteer Lead</p>
-                    <p>Third Year, IT</p>
+                    <h3>Raman Verma</h3>
+                    <p>Event Coordinator</p>
+                    <p>Bachelor of Computer Applications Second Semester <br> <a
+                            href="https://www.linkedin.com/in/raman-verma-0aba40282" target="_blank"><i
+                                class="fab fa-linkedin-in"></i></a></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Registration Form -->
-    <div class="registration-overlay" id="registration-overlay" style="    z-index: 1001;    overflow: auto;    align-items: baseline;">
-        <div class="registration-form">
-            <button class="close-form" id="close-form">
-                <i class="fas fa-times"></i>
-            </button>
-            <h2 class="form-title">Register for Bug Bounty</h2>
-            <form id="registration-form">
-                <div class="form-group">
-                    <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="enrollment">Enrollment Number *</label>
-                    <input type="number" id="enrollment" name="enrollment" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="department">Department *</label>
-                    <select id="department" name="department" required>
-                        <option value="" disabled selected>Select your department</option>
-                        <option value="BCA">BCA</option>
-                        <option value="MCA">MCA</option>
-                        
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="semester">Semester *</label>
-                    <select id="semester" name="semester" required>
-                        <option value="" disabled selected>Select your semester</option>
-                      
-                        <option value="2">2nd Semester</option>
-                       
-                        <option value="4">4th Semester</option>
-                     
-                        <option value="6">6th Semester</option>
-                       
-                        <option value="8">8th Semester</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="section">Section *</label>
-                    <select id="section" name="section" required>
-                        <option value="" disabled selected>Select your section</option>
-                        <option value="Morning A">Morning A</option>
-                        <option value="Morning B">Morning B</option>
-                    </select>
-                </div>
-                <button type="submit" class="form-submit">Submit Registration</button>
-                <div id="form-status" class="form-status"></div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Footer -->
     <footer>
@@ -195,19 +889,205 @@
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
                 <a href="#people">Team</a>
-                <a href="#" id="register-footer">Register</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSftIev1sCzKiAKAkCZQPLOgK0R7ESGAPtirqxgjCy5WYDZsSg/viewform?usp=header"
+                    id="register-footer">Register</a>
+                <a href="mailto:rajivkumarsai08@gmail.com">Report</a>
             </div>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <p class="copyright">&copy; 2025 TecnoVision Bug Bounty. All rights reserved. Designed with <i class="fas fa-heart" style="color: var(--primary-color);"></i> by the TecnoVision Team.</p>
+
+            <p class="copyright">&copy; 2025 TecnoVision Encrypted Evidence. All rights reserved. Designed with
+                <i class="fas fa-heart" style="color: var(--primary-color);"></i> by the TecnoVision Team.
+            </p>
         </div>
     </footer>
 
-    <script src="app.js"></script>
-   
+    <script>
+
+
+        // Mobile Navigation
+        function toggleNav() {
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+
+            const icon = hamburger.querySelector('i');
+            if (nav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        // Function to get a cookie
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+
+        // Scroll Header Effect
+        function scrollHeader() {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Matrix Rain Animation (Optional visual effect)
+        function setupMatrixRain() {
+            const canvas = document.createElement('canvas');
+            canvas.classList.add('matrix-rain');
+            document.querySelector('.hero').appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            // Characters for the matrix rain
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789{}[]=<>/\\|;:+-*&^%$#@!~`'.split('');
+
+            // Array of drops
+            const drops = [];
+
+            // Number of columns
+            const columns = Math.floor(canvas.width / 20);
+
+            // Initialize drops
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -500;
+            }
+
+            function drawMatrixRain() {
+                // Black background with opacity
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Green text
+                ctx.fillStyle = '#00FF00';
+                ctx.font = '15px monospace';
+
+                // Draw characters
+                for (let i = 0; i < drops.length; i++) {
+                    // Random character
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+
+                    // Draw the character
+                    ctx.fillText(text, i * 20, drops[i] * 1);
+
+                    // Reset if drop reaches bottom or randomly
+                    if (drops[i] * 1 > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+
+                    // Move the drop down
+                    drops[i]++;
+                }
+            }
+
+            // Animation loop
+            function animate() {
+                drawMatrixRain();
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // Resize handler
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    // Close mobile nav if open
+                    if (nav.classList.contains('active')) {
+                        toggleNav();
+                    }
+                }
+            });
+        });
+
+        // Event Listeners
+        window.addEventListener('load', () => {
+            // Initialize particles.js
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00ff00" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#00ff00",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        out_mode: "out"
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" }
+                    },
+                    modes: {
+                        repulse: { distance: 100, duration: 0.4 },
+                        push: { particles_nb: 4 }
+                    }
+                }
+            });
+
+            // Setup Matrix Rain effect
+            setupMatrixRain();
+        });
+
+        // Form related events
+        registerBtn.addEventListener('click', toggleRegistrationForm);
+        registerNav.addEventListener('click', toggleRegistrationForm);
+        registerFooter.addEventListener('click', toggleRegistrationForm);
+        closeFormBtn.addEventListener('click', toggleRegistrationForm);
+        registrationForm.addEventListener('submit', handleFormSubmission);
+
+        // Mobile nav toggle
+        hamburger.addEventListener('click', toggleNav);
+
+        // Scroll events
+        window.addEventListener('scroll', scrollHeader);
+    </script>
+
 </body>
+
 </html>
